@@ -1,0 +1,32 @@
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: ${JENKINS_ADMIN_ID}
+         password: ${JENKINS_ADMIN_PASSWORD}
+  authorizationStrategy:
+    globalMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+  remotingSecurity:
+    enabled: true
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: jenkins-github-ssh
+              username: jenkins
+              description: "Jenkins SSH Key for github"
+              privateKeySource:
+                directEntry:
+                  privateKey: ${PRIVATE_SSH_CERT}
+unclassified:
+  location:
+    url: http://server_ip:8085/
+jobs:
+  - file: /var/jenkins_home/seed-job.groovy
+  
